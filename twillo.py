@@ -1,4 +1,4 @@
-from twilio.rest import Client #update to the latest version
+from twilio.rest import Client  # update to the latest version
 from dotenv import load_dotenv
 import os
 
@@ -22,15 +22,17 @@ print("Conversation created:", conversation.sid)
 # 2. Check if the participant already exists
 participants = client.conversations.v1.conversations(conversation.sid).participants.list()
 
-# Check if your number is already a participant in the conversation
+# Flag to check if the participant exists
 participant_exists = False
+
+# Check if your number is already a participant in the conversation
 for participant in participants:
     print(f"Checking participant: {participant.messaging_binding_address}")
     if participant.messaging_binding_address == f"whatsapp:{my_number}":
         participant_exists = True
-        print("Participant already exists in the conversation.")
+        print("Participant already exists in the conversation. Continuing with the existing participant.")
 
-# If the participant doesn't exist, add them
+# 3. Only add the participant if they do not exist and handle the case when the bind already exists
 if not participant_exists:
     try:
         print(f"Adding participant with address: whatsapp:{my_number} and proxy address: {twilio_number}")
@@ -41,9 +43,13 @@ if not participant_exists:
             )
         print("Participant added:", participant.sid)
     except Exception as e:
-        print("Error adding participant:", e)
+        # If the error is due to an existing binding, handle it gracefully
+        if 'A binding for this participant and proxy address already exists' in str(e):
+            print("Participant already has an existing binding. Continuing with the existing participant.")
+        else:
+            print("Error adding participant:", e)
 
-# 3. Send a message in the conversation
+# 4. Send a message in the conversation (this happens whether the participant was added or already exists)
 message = client.conversations.v1.conversations(conversation.sid) \
     .messages \
     .create(author=f"whatsapp:{my_number}", body="👋 Hello from the Python script!")
