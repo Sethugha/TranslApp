@@ -30,13 +30,6 @@ async def translate_message(text, source=None, dest=None):
     return result
 
 
-
-def main():
-    test = asyncio.run(translate_message("No hay mal que por bien no venga", 'es', 'la'))
-    print(test)
-
-
-
 if __name__ == '__main__':
     main()
 
