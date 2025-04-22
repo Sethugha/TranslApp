@@ -5,14 +5,14 @@ import os
 # Load environment variables
 load_dotenv()
 
-# Credentials and phone numbers
+
 account_sid = os.getenv("MS_TWILIO_ACCOUNT_SID")
 api_sid = os.getenv("MS_TWILIO_API_KEY_SID")
 api_secret = os.getenv("MS_TWILIO_API_KEY_SECRET")
 my_number = os.getenv("MY_PHONE_NUMBER")
 twilio_number = "whatsapp:+493083795321"
 
-# Initialize Twilio client
+# Create a Twilio client
 client = Client(api_sid, api_secret, account_sid)
 
 # 1. Create a conversation (no v1 prefix needed)
