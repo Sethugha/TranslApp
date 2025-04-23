@@ -1,6 +1,6 @@
 from langdetect import detect
-import translation_api
-
+import asyncio
+import translation_api as tapi
 
 def ask_sender_for_translation_choice():
     """
@@ -37,16 +37,17 @@ def whatsapp_message():
         """
     user_message = funktion_api_Gent()
     if ask_sender_for_translation_choice():
-        return funktion_api_Gerd()
+        return translate_whatsapp_message(user_message, source_lang, target_lang)
     return user_message
 
 
-def funktion_api_Gerd():
+def translate_whatsapp_message(message, source_lang, target_lang):
     """
     the code from Gerd
     :return:
     """
-    return "Übersetzen"
+    translated_message = asyncio.run(tapi.translate_message(message, source_lang, target_lang))
+    return translated_message
 
 
 def funktion_api_Gent():

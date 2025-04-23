@@ -8,7 +8,7 @@ async def detect_language(text):
     return result
 
 
-async def translate_message(message, source_lang, target_lang):
+async def translate_message(message, source_lang = 'de', target_lang = 'en'):
     """Fetches the translation of 'text'
     :param
     :return: translated text

@@ -1,14 +1,20 @@
 from twilio.rest import Client
-from dotenv import load_dotenv
+from dotenv import load_dotenv, dotenv_values
 import os
 
 # Load environment variables
 load_dotenv()
+config = dotenv_values(".env")
 
+account_sid = config['Account-SID']
+api_key_sid = config['API-Key-SID']
+api_key_secret = config['API-Key-Secret']
+my_number = "whatsapp:+491775252784"
+twilio_number = "whatsapp:+493083795321"
 # Retrieve Twilio API credentials from environment variables
-account_sid = os.getenv('MS_TWILIO_ACCOUNT_SID')
-api_key_sid = os.getenv('MS_TWILIO_API_KEY_SID')
-api_key_secret = os.getenv('MS_TWILIO_API_KEY_SECRET')
+#account_sid = os.getenv('MS_TWILIO_ACCOUNT_SID')
+#api_key_sid = os.getenv('MS_TWILIO_API_KEY_SID')
+#api_key_secret = os.getenv('MS_TWILIO_API_KEY_SECRET')
 
 # Debug: Print credentials to ensure they are correctly loaded
 print(f"Account SID: {account_sid}")
