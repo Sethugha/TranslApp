@@ -10,10 +10,6 @@ account_sid = os.getenv('MS_TWILIO_ACCOUNT_SID')
 api_key_sid = os.getenv('MS_TWILIO_API_KEY_SID')
 api_key_secret = os.getenv('MS_TWILIO_API_KEY_SECRET')
 
-# Debug: Print credentials to ensure they are correctly loaded
-print(f"Account SID: {account_sid}")
-print(f"API Key SID: {api_key_sid}")
-print(f"API Key Secret: {api_key_secret}")
 
 # Initialize Twilio client with API Key SID, API Key Secret, and Account SID
 try:

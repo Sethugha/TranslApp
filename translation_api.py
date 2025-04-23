@@ -1,25 +1,23 @@
-import asyncio
 from deep_translator import GoogleTranslator
-
+from langdetect import detect
 
 async def detect_language(text):
     """
-    Detect the language of the given text.
+    Detect the language of the given text using langdetect.
     """
-    translator = GoogleTranslator()
-    detected_lang = translator.detect(text)
-    return detected_lang
-
+    try:
+        return detect(text)
+    except Exception as e:
+        print(f"Fehler bei der Spracherkennung: {e}")
+        return None
 
 async def translate_message(message, source_lang, target_lang):
-    """Fetches the translation of 'text'
-    :param
-    :return: translated text
     """
-    await asyncio.sleep(0)
-    translated = GoogleTranslator().translate(message)
-    return translated
-
-
-
-
+    Übersetzt die Nachricht vom Quell- in die Zielsprache mit Google Translate.
+    """
+    try:
+        translated = GoogleTranslator(source=source_lang, target=target_lang).translate(message)
+        return translated
+    except Exception as e:
+        print(f"Fehler bei der Übersetzung: {e}")
+        return None
