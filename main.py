@@ -1,10 +1,10 @@
-# Aktuellste Version
+# Aktuellste Version 2.0
 import asyncio
 import twilio_client as twilio
 from translation_api import translate_message
 from translation_api import detect_language
 
-AUTHORIZED_SENDER = "+491775252784"
+AUTHORIZED_SENDER = "+491719043240"
 
 def run_workflow():
     """Main function that runs the messaging and translation workflow."""
