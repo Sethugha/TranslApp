@@ -2,7 +2,7 @@ from twilio.rest import Client
 from dotenv import load_dotenv
 import os
 
-# Load environment variables Atuell
+# Load environment variables
 load_dotenv()
 
 # Retrieve Twilio API credentials from environment variables
@@ -25,13 +25,13 @@ except Exception as e:
 # A simple structure to manage clients and their conversations
 clients = {}
 
-def receive_message():
+def receive_message(sender):
     """Receives the latest WhatsApp messages via Twilio"""
     try:
         messages = client.messages.list(limit=1)
         for message in messages:
-            print(f"Message from {message.from_}: {message.body}")
-            return message.body, message.from_
+            print(f"Message from {sender}: {message.body}")
+            return message.body, sender
     except Exception as e:
         print(f"Error receiving message: {e}")
         return None, None
