@@ -1,3 +1,4 @@
+# Aktuellste Version
 from deep_translator import GoogleTranslator
 from langdetect import detect
 import asyncio
