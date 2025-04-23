@@ -1,6 +1,7 @@
-"""import translataion_api
-import Twilio
-import client"""
+import translation_api as tapi
+#import Twilio
+from twilio.rest import Client
+import asyncio
 
 import translate_functions
 
@@ -10,10 +11,9 @@ def dummy():
 
 
 def main():
-    dummy()
-    print("The text language is :",
-          translate_functions.detect_language(translate_functions.funktion_api_Gerd()))
-    print(translate_functions.whatsapp_message())
+    message = "Warum sprang der schnelle braune Fuchs über den faulen Hund?"
+    translated_message = asyncio.run(tapi.translate_message(message, 'de', 'en'))
+    print(translated_message)
 
 
 if __name__ == '__main__':

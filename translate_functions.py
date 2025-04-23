@@ -1,4 +1,5 @@
 from langdetect import detect
+import translation_api
 
 
 def ask_sender_for_translation_choice():

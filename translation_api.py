@@ -1,33 +1,28 @@
-import googletrans
-import requests
 import asyncio
-from dotenv import dotenv_values
-from twilio.rest import Client
-from googletrans import Translator
-
-def test_installation(phonenum_to, phonenum_from, body):
-    # Your Account SID and Auth Token from console.twilio.com
-    config = dotenv_values(".env")
-    account_sid = config['API-Key-SID']
-    auth_token = config['API-Key-secret']
-    client = Client(account_sid, auth_token)
-    message = client.messages.create(
-        to=phonenum_to,
-        from_=phonenum_from,
-        body=body)
-    return message.sid
+from deep_translator import GoogleTranslator
 
 
+async def detect_language(text):
+    await asyncio.sleep(0)
+    result = GoogleTranslator(source=source_lang, target=target_lang).detect(message)
+    return result
 
 
-async def translate_message(text, source=None, dest=None):
+async def translate_message(message, source_lang, target_lang):
     """Fetches the translation of 'text'
     :param
     :return: translated text
     """
-    async with Translator() as translator:
-        result = await translator.translate(text)
-    return result
+    await asyncio.sleep(0)
+    translated = GoogleTranslator().translate(message)
+    return translated
+
+
+
+def main():
+    result = asyncio.run(translate_message("Más vale tarde que nunca", 'es', 'de'))
+
+    print(result)
 
 
 if __name__ == '__main__':
