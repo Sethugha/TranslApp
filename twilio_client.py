@@ -1,8 +1,9 @@
 from twilio.rest import Client
-from dotenv import load_dotenv
+from dotenv import load_dotenv, dotenv_values
 import os
 
 load_dotenv()
+
 
 account_sid = os.getenv('MS_TWILIO_ACCOUNT_SID')
 api_key_sid = os.getenv('MS_TWILIO_API_KEY_SID')
@@ -14,14 +15,16 @@ client = Client(api_key_sid, api_key_secret, account_sid)
 clients = {}
 
 def receive_message(sender):
-    """Simuliert Empfang der letzten Nachricht"""
+    """Receive a message from a WhatsApp sender"""
     try:
-        message = client.conversations.v1.services(sender)
-        print(f"Message from {sender}: {message.api_key_sid}")
-        return message.body, sender
+        messages = client.messages.list(limit=1)
+        for message in messages:
+            print(f"Message from {sender}: {message.body}")
+            return message.body, sender
+
     except Exception as e:
         print(f"Error receiving message: {e}")
-        return None, None
+        return None
 
 def manage_client_conversation(sender, message_body):
     if sender in clients:
@@ -66,3 +69,4 @@ def send_message_to_conversation(sender, message_body):
         print(f"Sent message to {sender} via Conversation.")
     except Exception as e:
         print(f"Error sending message: {e}")
+
