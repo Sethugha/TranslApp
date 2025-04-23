@@ -48,15 +48,6 @@ def funktion_api_Gerd():
     """
     return "Übersetzen"
 
-
-def funktion_api_Gent():
-    """
-    the code Gent
-    :return:
-    """
-    return "translate"
-
-
 def detect_language(text):
     """
       Detect the language of the given text.
