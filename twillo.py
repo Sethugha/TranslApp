@@ -5,38 +5,40 @@ import os
 # Load environment variables
 load_dotenv()
 
+# Get Twilio API keys from environment variables
+account_sid = os.getenv('MS_TWILIO_ACCOUNT_SID')
+api_key_sid = os.getenv('MS_TWILIO_API_KEY_SID')
+api_key_secret = os.getenv('MS_TWILIO_API_KEY_SECRET')
 
-account_sid = os.getenv("MS_TWILIO_ACCOUNT_SID")
-api_sid = os.getenv("MS_TWILIO_API_KEY_SID")
-api_secret = os.getenv("MS_TWILIO_API_KEY_SECRET")
-my_number = os.getenv("MY_PHONE_NUMBER")
-twilio_number = "whatsapp:+493083795321"
+# Initialize Twilio client
+client = Client(account_sid, api_key_sid, api_key_secret)
 
-# Create a Twilio client
-client = Client(api_sid, api_secret, account_sid)
+# A simple structure to manage clients and their conversations
+clients = {}
 
-# 1. Create a conversation (no v1 prefix needed)
-conversation = client.conversations.conversations.create(friendly_name="My WhatsApp Chat")
-print("Conversation created:", conversation.sid)
+def receive_message():
+    """Receives the latest WhatsApp messages via Twilio"""
+    messages = client.messages.list(limit=1)
+    for message in messages:
+        print(f"Message from {message.from_}: {message.body}")
+        return message.body, message.from_
 
-# 2. Check if participant already exists and add them (no v1 prefix needed)
-participants = client.conversations.conversations(conversation.sid).participants.list()
+def manage_client_conversation(sender, message_body):
+    """Checks if a client already exists, and creates a conversation if not"""
+    if sender in clients:
+        print(f"Client {sender} already exists. Adding message to their conversation.")
+        # Append the message to the client's existing conversation
+        clients[sender].append(message_body)
+    else:
+        print(f"New client {sender} created.")
+        # Create a new conversation for the client
+        clients[sender] = [message_body]
 
-# Check if the participant (your phone number) is already in the conversation
-if not any(p.messaging_binding_address == f"whatsapp:{my_number}" for p in participants):
-    participant = client.conversations.conversations(conversation.sid) \
-        .participants \
-        .create(
-            messaging_binding_address=f"whatsapp:{my_number}",
-            messaging_binding_proxy_address=twilio_number
-        )
-    print("Participant added:", participant.sid)
-else:
-    print("Participant already exists.")
-
-# 3. Send a message to the conversation (no v1 prefix needed)
-message = client.conversations.conversations(conversation.sid) \
-    .messages \
-    .create(author=f"whatsapp:{my_number}", body="👋 Hello from Python script!")
-
-print("Message sent:", message.sid)
+def send_message(to, body):
+    """Sends a WhatsApp message to the given number"""
+    message = client.messages.create(
+        body=body,
+        from_='whatsapp:+14155238886',
+        to=f'whatsapp:{to}'
+    )
+    print(f"Message sent to {to}: {body}")
