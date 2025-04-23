@@ -1,4 +1,4 @@
-# Aktuellste Version 2.0
+# Aktuellste Version 2.
 import asyncio
 import twilio_client as twilio
 from translation_api import translate_message

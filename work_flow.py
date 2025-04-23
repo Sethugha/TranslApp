@@ -1,4 +1,4 @@
-# Aktuellste Version 2.0
+# Aktuellste Version 2.
 from langdetect import detect
 import translation_api
 

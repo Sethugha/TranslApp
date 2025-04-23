@@ -1,4 +1,4 @@
-# Aktuellste Version 2.0
+# Aktuellste Version 2
 from twilio.rest import Client
 from dotenv import load_dotenv, dotenv_values
 import os
