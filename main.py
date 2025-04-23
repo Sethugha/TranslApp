@@ -2,15 +2,16 @@
 import asyncio
 import twilio_client as twilio
 from translation_api import translate_message  # Assuming translation is handled in a separate file
-
+AUTHORIZED_SENDER = "+491775252784"
 
 def run_workflow():
-    """Main function that runs the workflow"""
+    """Main function that runs the messaging and translation workflow."""
     print("Starting workflow...")
 
-    # Step 1: Receive message from Person A (via Twilio)
-    received_message, sender = twilio.receive_message()
-
+    # Step 1: Receive the latest WhatsApp message
+    sender = AUTHORIZED_SENDER
+    received_message, sender = twilio.receive_message(sender)
+    print(f"Received message from {sender}: {received_message}")
     if received_message:
         # Step 2: Handle the message, check if client already exists, and update their conversation
         twilio.manage_client_conversation(sender, received_message)
