@@ -2,7 +2,7 @@ from twilio.rest import Client
 from dotenv import load_dotenv
 import os
 
-# Load environment variables
+# Load environment variables Atuell
 load_dotenv()
 
 # Retrieve Twilio API credentials from environment variables
