@@ -21,7 +21,7 @@ print(f"Name: {conversation.friendly_name}")
 
 # Beispielnummern
 user_number = "whatsapp:+491775252784"
-twilio_number = "whatsapp:+493083795321"  # Deine Twilio Sandbox Nummer
+twilio_number = "whatsapp:+493083795321"
 
 # Prüfen ob Teilnehmer schon existiert
 participants = client.conversations \

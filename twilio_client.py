@@ -49,7 +49,7 @@ def participant_check():
 
     # Prüfen ob Teilnehmer schon existiert
     participants = client.conversations \
-        .v1.conversations(conversation_sid) \
+        .v1.conversations(use_conversation_sid) \
         .participants \
         .list()
 
@@ -78,7 +78,7 @@ def send_message_to_conversation(to, text):
     use_conversation_sid = get_conversation_id()
     try:
         message = client.conversations \
-            .v1.conversations(conversation_sid) \
+            .v1.conversations(use_conversation_sid) \
             .messages \
             .create(
             author="ChatBenutzer123",

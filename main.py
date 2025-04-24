@@ -1,22 +1,25 @@
 # Aktuellste Version 2.
 import asyncio
+import os
 import twilio_client as twilio
 from translation_api import translate_message
 from translation_api import detect_language
+from dotenv import load_dotenv
 
-AUTHORIZED_SENDER = "+491775252784"
+load_dotenv()
+
+sender_number = os.getenv('AUTHORIZED_SENDER')
+
+
 
 def run_workflow():
     """Main function that runs the messaging and translation workflow."""
-
-
+    sender = sender_number
     # Step 1: Receive the latest WhatsApp message
-    sender = AUTHORIZED_SENDER
     received_message, sender = twilio.receive_message(sender)
     print(f"Received message from {sender}: {received_message}")
 
     if received_message:
-
 
         detected_language = asyncio.run(detect_language(received_message))
         print(f"Detected language: {detected_language}")
