@@ -10,7 +10,7 @@ account_sid = os.getenv('MS_TWILIO_ACCOUNT_SID')
 api_key_sid = os.getenv('MS_TWILIO_API_KEY_SID')
 api_key_secret = os.getenv('MS_TWILIO_API_KEY_SECRET')
 chat_service_sid = os.getenv('MS_TWILIO_CHAT_SERVICE_SID')
-conversation_sid = "CH5b24cd3d6f9b46468c02aa18b1bba2a8"
+conversation_sid = "CH2374ec189a69428bbddd5bb7add0b772"
 twilio_number = os.getenv('TWILIO_NUMBER')
 sender_number = os.getenv('MY_PHONE_NUMBER')
 
@@ -71,12 +71,14 @@ def send_message_to_conversation(to, text):
     """Sends a WhatsApp message to the given number"""
     use_conversation_sid = get_conversation_id()
     try:
-        message = client.conversations \
-            .v1.conversations(use_conversation_sid) \
-            .messages \
-            .create(
-            author="ChatBenutzer123",
-            body=text
+        # Nummern
+        to_whatsapp_number = 'whatsapp:+491719043240'  # Deine WhatsApp-Nummer
+        from_whatsapp_number = 'whatsapp:+493083795321'
+
+        message = client.messages.create(
+            body=text,
+            from_=twilio_number,
+            to=sender_number
         )
 
         print("📨 WhatsApp message sending ...")
