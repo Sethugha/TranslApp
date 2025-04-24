@@ -1,4 +1,4 @@
-# Aktuellste Version 2.
+# Aktuellste Version (fertig)
 import asyncio
 import json
 import os
