@@ -36,10 +36,6 @@ def receive_message(sender):
 
 def get_conversation_id():
     conversation = client.conversations.v1.conversations(conversation_sid).fetch()
-    print("✅ Conversation geladen:")
-    print(f"SID: {conversation.sid}")
-    print(f"Name: {conversation.friendly_name}")
-
     return conversation.sid
 
 
