@@ -12,6 +12,7 @@ api_key_secret = os.getenv('MS_TWILIO_API_KEY_SECRET')
 chat_service_sid = os.getenv('MS_TWILIO_CHAT_SERVICE_SID')
 twilio_number = os.getenv('TWILIO_NUMBER')
 sender_number = os.getenv('MY_PHONE_NUMBER')
+AUTHORIZED_SENDER = os.getenv('AUTHORIZED_SENDER')
 
 
 
@@ -33,6 +34,7 @@ def receive_message(sender):
         return None, None
 
 def get_conversation_id():
+
     conversation = client.conversations \
         .v1.services(chat_service_sid) \
         .conversations \
@@ -71,22 +73,40 @@ def participant_check(use_conversation_sid):
     except Exception as e:
         print(f"❌ Error in participant_check: {e}")
 
+    except Exception as e:
+        print(f"❌ Error in participant_check: {e}")
 
-def send_message_to_conversation(to, text):
+
+def send_message_to_conversation(to, text, use_conversation_sid):
     """Sends a WhatsApp message to the given number"""
-    use_conversation_sid = get_conversation_id()
+
     try:
         message = client.conversations \
             .v1.services(chat_service_sid) \
             .conversations(use_conversation_sid) \
             .messages \
             .create(
-            author="ChatBenutzer123",
+            author="User123",
             body=text
         )
-
         print("📨 WhatsApp message sending ...")
         print(f"\n📨 Message sent to {to}:")
         print(f"    → {text}\n")
+
     except Exception as e:
         print(f"❌ Error sending message: {e}")
+
+
+def delete_conversation(conversation_sid):
+
+    try:
+        # Delete the conversation
+        client.conversations \
+            .v1.services(chat_service_sid) \
+            .conversations(conversation_sid) \
+            .delete()
+
+        print(f"✅ Conversation {conversation_sid} deleted successfully.")
+
+    except Exception as e:
+        print(f"❌ Error deleting conversation {conversation_sid}: {e}")

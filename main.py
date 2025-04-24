@@ -26,6 +26,7 @@ def run_workflow():
     print()
 
     conversation_id = twilio.get_conversation_id()
+
     if conversation_id:
         print(f" ✅ Conversation found! \n -> SID: {conversation_id}")
         print()
@@ -45,11 +46,11 @@ def run_workflow():
         print("❌ Invalid input. Please enter a valid language code or full country/language name.")
 
 
-
     while True:
         user_choice = input("\n📩 Press Enter to check for new messages or type 'exit' to quit: ").lower()
 
         if user_choice == 'exit':
+            twilio.delete_conversation(conversation_id)
             print("\n👋 Exiting the workflow. See you next time!")
             break
         elif user_choice:
@@ -90,7 +91,7 @@ def run_workflow():
             print()
 
             # Step 7: Send the translated message to Person A via Twilio
-            twilio.send_message_to_conversation(sender, translated_response)
+            twilio.send_message_to_conversation(sender, translated_response, conversation_id)
 
 
 
