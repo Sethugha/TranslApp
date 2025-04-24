@@ -25,7 +25,6 @@ def receive_message(sender):
         messages = client.messages.list(limit=20)
         for message in messages:
             if message.from_ == f'whatsapp:{sender}':
-                print(f"Message from {sender}: {message.body}")
                 return message.body, sender
         print("No message from authorized sender found.")
         return None, None
@@ -62,11 +61,10 @@ def participant_check():
             messaging_binding_address=sender_number,
             messaging_binding_proxy_address=twilio_number
         )
-        print("👥 Teilnehmer hinzugefügt:")
+        print("👥 Participant added:")
         print(f"Participant SID: {participant.sid}")
     else:
-        print("⚠️ Teilnehmer existiert bereits – wird nicht erneut hinzugefügt.")
-
+        print("⚠️ Participant already exists – will not be added again.")
 
 
 def send_message_to_conversation(to, text):
@@ -81,7 +79,8 @@ def send_message_to_conversation(to, text):
             body=text
         )
 
-        print("📨 WhatsApp-Nachricht gesendet.")
-        print(f"Message sent to {to}: {text}")
+        print("📨 WhatsApp message sending ...")
+        print(f"\n📨 Message send to {to}:")
+        print(f"    → {text}\n")
     except Exception as e:
         print(f"Error sending message: {e}")
