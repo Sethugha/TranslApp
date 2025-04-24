@@ -12,7 +12,6 @@ api_key_secret = os.getenv('MS_TWILIO_API_KEY_SECRET')
 chat_service_sid = os.getenv('MS_TWILIO_CHAT_SERVICE_SID')
 twilio_number = os.getenv('TWILIO_NUMBER')
 sender_number = os.getenv('MY_PHONE_NUMBER')
-AUTHORIZED_SENDER = os.getenv('AUTHORIZED_SENDER')
 
 
 
