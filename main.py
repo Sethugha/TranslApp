@@ -4,11 +4,11 @@ import twilio_client as twilio
 from translation_api import translate_message
 from translation_api import detect_language
 
-AUTHORIZED_SENDER = "+491719043240"
+AUTHORIZED_SENDER = "+491775252784"
 
 def run_workflow():
     """Main function that runs the messaging and translation workflow."""
-    print("Starting workflow...")
+
 
     # Step 1: Receive the latest WhatsApp message
     sender = AUTHORIZED_SENDER
@@ -16,7 +16,7 @@ def run_workflow():
     print(f"Received message from {sender}: {received_message}")
 
     if received_message:
-        twilio.manage_client_conversation(sender, received_message)
+
 
         detected_language = asyncio.run(detect_language(received_message))
         print(f"Detected language: {detected_language}")
@@ -44,6 +44,7 @@ def run_workflow():
         print()
 
         # Step 7: Send the translated message to Person A via Twilio
+        twilio.participant_check()
         twilio.send_message_to_conversation(sender, translated_response)
         print(f"Sent translated message to {sender}: {translated_response}")
 
