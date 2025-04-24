@@ -25,11 +25,11 @@ def run_workflow():
     print("🔍 Checking if the Twilio conversation ID is valid...")
     print()
 
-
-    if twilio.get_conversation_id():
-        print(f" ✅ Conversation found! \n -> SID: {twilio.get_conversation_id()}")
+    conversation_id = twilio.get_conversation_id()
+    if conversation_id:
+        print(f" ✅ Conversation found! \n -> SID: {conversation_id}")
         print()
-        twilio.participant_check()
+        twilio.participant_check(conversation_id)
         print()
 
     with open('language_code.txt', 'r') as file:

@@ -10,7 +10,6 @@ account_sid = os.getenv('MS_TWILIO_ACCOUNT_SID')
 api_key_sid = os.getenv('MS_TWILIO_API_KEY_SID')
 api_key_secret = os.getenv('MS_TWILIO_API_KEY_SECRET')
 chat_service_sid = os.getenv('MS_TWILIO_CHAT_SERVICE_SID')
-conversation_sid = "CH5b24cd3d6f9b46468c02aa18b1bba2a8"
 twilio_number = os.getenv('TWILIO_NUMBER')
 sender_number = os.getenv('MY_PHONE_NUMBER')
 
@@ -34,37 +33,43 @@ def receive_message(sender):
         return None, None
 
 def get_conversation_id():
-    conversation = client.conversations.v1.conversations(conversation_sid).fetch()
+    conversation = client.conversations \
+        .v1.services(chat_service_sid) \
+        .conversations \
+        .create(friendly_name="My Conversation")
     return conversation.sid
 
 
-def participant_check():
-    use_conversation_sid = get_conversation_id()
+def participant_check(use_conversation_sid):
 
-
-    # Prüfen ob Teilnehmer schon existiert
-    participants = client.conversations \
-        .v1.conversations(use_conversation_sid) \
-        .participants \
-        .list()
-
-    already_exists = any(
-        p.messaging_binding.get("address") == sender_number
-        for p in participants if p.messaging_binding
-    )
-
-    if not already_exists:
-        participant = client.conversations \
-            .v1.conversations(conversation_sid) \
+    try:
+        participants = client.conversations \
+            .v1.services(chat_service_sid) \
+            .conversations(use_conversation_sid) \
             .participants \
-            .create(
-            messaging_binding_address=sender_number,
-            messaging_binding_proxy_address=twilio_number
+            .list()
+
+        already_exists = any(
+            p.messaging_binding.get("address") == sender_number
+            for p in participants if p.messaging_binding
         )
-        print("👥 Participant added:")
-        print(f"Participant SID: {participant.sid}")
-    else:
-        print("⚠️ Participant already exists – will not be added again.")
+
+        if not already_exists:
+            participant = client.conversations \
+                .v1.services(chat_service_sid) \
+                .conversations(use_conversation_sid) \
+                .participants \
+                .create(
+                messaging_binding_address=sender_number,
+                messaging_binding_proxy_address=twilio_number
+            )
+            print("👥 Participant added:")
+            print(f"Participant SID: {participant.sid}")
+        else:
+            print("⚠️ Participant already exists – will not be added again.")
+
+    except Exception as e:
+        print(f"❌ Error in participant_check: {e}")
 
 
 def send_message_to_conversation(to, text):
@@ -72,7 +77,8 @@ def send_message_to_conversation(to, text):
     use_conversation_sid = get_conversation_id()
     try:
         message = client.conversations \
-            .v1.conversations(use_conversation_sid) \
+            .v1.services(chat_service_sid) \
+            .conversations(use_conversation_sid) \
             .messages \
             .create(
             author="ChatBenutzer123",
@@ -80,7 +86,7 @@ def send_message_to_conversation(to, text):
         )
 
         print("📨 WhatsApp message sending ...")
-        print(f"\n📨 Message send to {to}:")
+        print(f"\n📨 Message sent to {to}:")
         print(f"    → {text}\n")
     except Exception as e:
-        print(f"Error sending message: {e}")
+        print(f"❌ Error sending message: {e}")

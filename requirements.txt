@@ -1,2 +1,4 @@
 twilio
 python-dotenv
+deep_translator
+langdetect
