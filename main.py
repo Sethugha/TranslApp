@@ -1,4 +1,3 @@
-
 import asyncio
 import json
 import os
@@ -7,14 +6,11 @@ from translation_api import translate_message
 from translation_api import detect_language
 from dotenv import load_dotenv
 
-
 load_dotenv()
 
 sender_number = os.getenv('AUTHORIZED_SENDER')
 
-
 def run_workflow():
-    """Main function that runs the messaging and translation workflow."""
     print("\n" + "=" * 75)
     print("🌍  WELCOME TO TRANSLAPP – YOUR WHATSAPP TRANSLATION ASSISTANT  🌍")
     print("-" * 75)
@@ -22,18 +18,15 @@ def run_workflow():
     print("preferred languages. Let’s get started! 🚀")
     print("=" * 75 + "\n")
 
-    print("🔍 Checking if the Twilio conversation ID is valid...")
-    print()
-
+    print("🔍 Checking if the Twilio conversation ID is valid...\n")
 
     if twilio.get_conversation_id():
-        print(f" ✅ Conversation found! \n -> SID: {twilio.get_conversation_id()}")
-        print()
+        print(f" ✅ Conversation found! \n -> SID: {twilio.get_conversation_id()}\n")
         twilio.participant_check()
         print()
 
     with open('language_code.txt', 'r') as file:
-        language_code =json.load(file)
+        language_code = json.load(file)
 
     while True:
         preferred_language = input("🌐 Enter your preferred language or country code (e.g. en, de, French): ").lower()
@@ -44,61 +37,53 @@ def run_workflow():
             break
         print("❌ Invalid input. Please enter a valid language code or full country/language name.")
 
-
+    last_message_sid = None  # NEU: letzte empfangene Nachricht merken
 
     while True:
-        user_choice = input("\n📩 Press Enter to check for new messages or "
-                            "type 'exit' to quit or "
-                            "type 'send' to send an message: ").lower()
+        user_choice = input(f"\n📩 Press Enter to check for new messages or type 'exit' to quit"
+                            f"\n or type 'send' to send a message to {sender_number}: ").lower()
 
+        sender = sender_number
         if user_choice == 'exit':
             print("\n👋 Exiting the workflow. See you next time!")
             break
-        elif user_choice != 'send':
-            sender = sender_number
-            print()
-            # Step 1: Receive the latest WhatsApp message
-            received_message, sender = twilio.receive_message(sender)
-            if not received_message:
-                print("📭 No new messages.")
-            else:
-                print(f"\n📨 Message received from {sender}:")
-                print(f"    → {received_message}\n")
-
-
-            if received_message:
-                detected_language = asyncio.run(detect_language(received_message))
-                print(f"🧠 Detected language: {detected_language}")
-                print()
-
-
-                user_translated_language = asyncio.run(translate_message(received_message, preferred_language))
-                print(f"🌐 Translated message: {user_translated_language}\n")
-
-
-                # Step 4: Let Person B reply to the message (simulating input here)
-                print()
-                response = input("💬 Type your reply: ")
-                print()
-
-
-                # Step 6: Translate the response
-                translated_response = asyncio.run(translate_message(response, detected_language))
-                print(f"🔁 Translated reply to sender’s language: {translated_response}")
-                print()
-
-                # Step 7: Send the translated message to Person A via Twilio
-                twilio.send_message_to_conversation(sender, translated_response)
         elif user_choice == 'send':
-            sender = sender_number
             print()
-            # Step 4: Let Person B reply to the message (simulating input here)
-            response = input("💬 Type your sending message: ")
-            print()
+            sending_message = input("💬 Type your message to send: ")
+            twilio.send_message_to_conversation(sender, sending_message)
+            continue
+        elif user_choice:
+            continue
 
-            # Step 7: Send the translated message to Person A via Twilio
-            twilio.send_message_to_conversation(sender, response)
+        print()
 
+        # Step 1: Receive the latest WhatsApp message
+        received_message, sender, message_sid = twilio.receive_message(sender)
+
+        if not received_message or message_sid == last_message_sid:
+            print("📭 No new messages.")
+            print("\n👋 Exiting the workflow. See you next time!")
+            break
+        last_message_sid = message_sid
+
+
+        print(f"\n📨 Message received from {sender}:")
+        print(f"    → {received_message}\n")
+
+        detected_language = asyncio.run(detect_language(received_message))
+        print(f"🧠 Detected language: {detected_language}\n")
+
+        user_translated_language = asyncio.run(translate_message(received_message, preferred_language))
+        print(f"🌐 Translated message: {user_translated_language}\n")
+
+        print()
+        response = input("💬 Type your reply: ")
+        print()
+
+        translated_response = asyncio.run(translate_message(response, detected_language))
+        print(f"🔁 Translated reply to sender’s language: {translated_response}\n")
+
+        twilio.send_message_to_conversation(sender, translated_response)
 
 
 

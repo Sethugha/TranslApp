@@ -1,11 +1,9 @@
-# Aktuellste Version (fertig)
 import os
 from twilio.rest import Client
 from dotenv import load_dotenv
 
 load_dotenv()
 
-# Umgebungsvariablen laden
 account_sid = os.getenv('MS_TWILIO_ACCOUNT_SID')
 api_key_sid = os.getenv('MS_TWILIO_API_KEY_SID')
 api_key_secret = os.getenv('MS_TWILIO_API_KEY_SECRET')
@@ -14,9 +12,6 @@ conversation_sid = "CH2374ec189a69428bbddd5bb7add0b772"
 twilio_number = os.getenv('TWILIO_NUMBER')
 sender_number = os.getenv('MY_PHONE_NUMBER')
 
-
-
-# Twilio Client initialisieren
 client = Client(api_key_sid, api_key_secret, account_sid)
 
 def receive_message(sender):
@@ -25,24 +20,19 @@ def receive_message(sender):
         messages = client.messages.list(limit=20)
         for message in messages:
             if message.from_ == f'whatsapp:{sender}':
-                return message.body, sender
+                return message.body, sender, message.sid  # NEU: SID mit zurückgeben
         print("No message from authorized sender found.")
-        return None, None
-
+        return None, None, None
     except Exception as e:
         print(f"Error receiving message: {e}")
-        return None, None
+        return None, None, None
 
 def get_conversation_id():
     conversation = client.conversations.v1.conversations(conversation_sid).fetch()
     return conversation.sid
 
-
 def participant_check():
     use_conversation_sid = get_conversation_id()
-
-
-    # Prüfen ob Teilnehmer schon existiert
     participants = client.conversations \
         .v1.conversations(use_conversation_sid) \
         .participants \
@@ -58,23 +48,18 @@ def participant_check():
             .v1.conversations(conversation_sid) \
             .participants \
             .create(
-            messaging_binding_address=sender_number,
-            messaging_binding_proxy_address=twilio_number
-        )
+                messaging_binding_address=sender_number,
+                messaging_binding_proxy_address=twilio_number
+            )
         print("👥 Participant added:")
         print(f"Participant SID: {participant.sid}")
     else:
         print("⚠️ Participant already exists – will not be added again.")
 
-
 def send_message_to_conversation(to, text):
     """Sends a WhatsApp message to the given number"""
     use_conversation_sid = get_conversation_id()
     try:
-        # Nummern
-        to_whatsapp_number = 'whatsapp:+491719043240'  # Deine WhatsApp-Nummer
-        from_whatsapp_number = 'whatsapp:+493083795321'
-
         message = client.messages.create(
             body=text,
             from_=twilio_number,
