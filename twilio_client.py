@@ -25,7 +25,6 @@ def receive_message(sender):
         for message in messages:
             if message.from_ == f'whatsapp:{sender}':
                 return message.body, sender
-        print("No message from authorized sender found.")
         return None, None
 
     except Exception as e:
@@ -96,7 +95,7 @@ def send_message_to_conversation(to, text, use_conversation_sid):
         print(f"❌ Error sending message: {e}")
 
 
-def delete_conversation(conversation_sid):
+def delete_conversation(conversation_sid="CH72c8cb53c00c47f79b024d3c1f6df9bd"):
 
     try:
         # Delete the conversation
