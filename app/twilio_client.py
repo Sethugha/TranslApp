@@ -2,6 +2,7 @@
 import os
 from twilio.rest import Client
 from dotenv import load_dotenv
+from utils.colors import Colors as c
 
 load_dotenv()
 
@@ -63,8 +64,8 @@ def participant_check(use_conversation_sid):
                 messaging_binding_address=sender_number,
                 messaging_binding_proxy_address=twilio_number
             )
-            print("👥 Participant added:")
-            print(f"Participant SID: {participant.sid}")
+            print(f"{c.blue}👥 Participant added:{c.reset}")
+            print(f"Participant SID: {c.cyan}{participant.sid}{c.reset}")
         else:
             print("⚠️ Participant already exists – will not be added again.")
 
@@ -87,15 +88,14 @@ def send_message_to_conversation(to, text, use_conversation_sid):
             author="User123",
             body=text
         )
-        print("📨 WhatsApp message sending ...")
-        print(f"\n📨 Message sent to {to}:")
-        print(f"    → {text}\n")
+        print(f"\n📨 Message sent to {c.cyan}{to}{c.reset}:")
+        print(f"    → {c.bold}{c.cyan}{text}\n{c.reset}")
 
     except Exception as e:
-        print(f"❌ Error sending message: {e}")
+        print(f"{c.red}❌ Error sending message: {e}{c.reset}")
 
 
-def delete_conversation(conversation_sid="CH72c8cb53c00c47f79b024d3c1f6df9bd"):
+def delete_conversation(conversation_sid):
 
     try:
         # Delete the conversation
@@ -104,7 +104,7 @@ def delete_conversation(conversation_sid="CH72c8cb53c00c47f79b024d3c1f6df9bd"):
             .conversations(conversation_sid) \
             .delete()
 
-        print(f"✅ Conversation {conversation_sid} deleted successfully.")
+        print(f"{c.blue}✅ Conversation {conversation_sid} deleted successfully.{c.reset}")
 
     except Exception as e:
-        print(f"❌ Error deleting conversation {conversation_sid}: {e}")
+        print(f"{c.red}❌ Error deleting conversation {conversation_sid}: {e}{c.reset}")
