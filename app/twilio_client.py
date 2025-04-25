@@ -71,9 +71,10 @@ def participant_check(use_conversation_sid):
 
     except Exception as e:
         print(f"❌ Error in participant_check: {e}")
+        delete_conversation(str(e)[-34:])
+        print(f"{c.blue} Please restart the app to get a new conversation_sid.{c.reset}")
+        exit()
 
-    except Exception as e:
-        print(f"❌ Error in participant_check: {e}")
 
 
 def send_message_to_conversation(to, text, use_conversation_sid):
